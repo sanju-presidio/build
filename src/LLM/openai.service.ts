@@ -12,15 +12,28 @@ import {
   TypeAction,
 } from "../tools/tools";
 import { ChatCompletion } from "openai/src/resources/chat/completions/completions";
+import { EnvironmentConfig } from "../interfaces/environment.config";
 
 export class OpenAIProvider extends LLMProviderService {
-  private readonly apiKey = process.env.OPENAI_API_KEY || "";
-  private readonly openai: OpenAI | AzureOpenAI;
-
+  private openai!: OpenAI | AzureOpenAI;
+  environmentConfig!: EnvironmentConfig;
   constructor() {
     super();
+    this.createInstances({
+      apiKey: process.env.OPENAI_API_KEY as string,
+    });
+  }
+
+  createInstances(config: { apiKey: string }) {
     this.openai = new OpenAI({
-      apiKey: this.apiKey,
+      apiKey: config.apiKey,
+    });
+  }
+
+  setEnvironmentConfig(environmentConfig: EnvironmentConfig) {
+    this.environmentConfig = environmentConfig;
+    this.createInstances({
+      apiKey: environmentConfig.OPENAI_API_KEY as string,
     });
   }
 

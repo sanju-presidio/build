@@ -13,22 +13,40 @@ const system_prompt_1 = require("../prompts/system.prompt");
 class AnthropicService extends provider_base_1.LLMProviderService {
     constructor() {
         super();
-        this.apiKey = process.env.ANTHROPIC_API_KEY;
-        this.useBedrock = process.env.USE_BEDROCK === "true";
-        if (!this.useBedrock) {
+        this.createInstances({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+            useBedrock: process.env.USE_BEDROCK === "true",
+            AWS_REGION: process.env.AWS_REGION,
+            AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+        });
+    }
+    createInstances(config) {
+        this.useBedrock = config.useBedrock;
+        if (!config.useBedrock) {
             this.anthropic = new sdk_1.default({
-                apiKey: this.apiKey,
+                apiKey: config.apiKey,
             });
         }
         else {
             this.bedrock = new client_bedrock_runtime_1.BedrockRuntimeClient({
-                region: process.env.AWS_REGION || "us-west-2",
+                region: config.AWS_REGION || "us-west-2",
                 credentials: {
-                    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+                    accessKeyId: config.AWS_ACCESS_KEY_ID || "",
+                    secretAccessKey: config.AWS_SECRET_ACCESS_KEY || "",
                 },
             });
         }
+    }
+    setEnvironmentConfig(environmentConfig) {
+        this.environmentConfig = environmentConfig;
+        this.createInstances({
+            apiKey: environmentConfig.ANTHROPIC_API_KEY,
+            useBedrock: environmentConfig.USE_BEDROCK,
+            AWS_REGION: environmentConfig.AWS_REGION,
+            AWS_ACCESS_KEY_ID: environmentConfig.AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY: environmentConfig.AWS_SECRET_ACCESS_KEY,
+        });
     }
     async performTask(source, history, originalImage, elements, model = "anthropic.claude-3-5-sonnet-20241022-v2:0", retryCount = 3) {
         try {

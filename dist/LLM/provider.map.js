@@ -9,11 +9,15 @@ class ProviderService {
         this.anthropic = new anthropic_service_1.AnthropicService();
         this.openai = new openai_service_1.OpenAIProvider();
     }
-    getProviderInstance(provider) {
+    getProviderInstance(provider, environmentConfig) {
         switch (provider) {
             case app_enum_1.LLMProviders.OPENAI:
+                environmentConfig &&
+                    this.openai.setEnvironmentConfig(environmentConfig);
                 return this.openai;
             case app_enum_1.LLMProviders.ANTHROPIC:
+                environmentConfig &&
+                    this.anthropic.setEnvironmentConfig(environmentConfig);
                 return this.anthropic;
         }
     }

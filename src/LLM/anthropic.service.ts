@@ -17,6 +17,7 @@ import {
   TypeAction,
 } from "../tools/tools";
 import { getSystemPrompt } from "../prompts/system.prompt";
+import { EnvironmentConfig } from "../interfaces/environment.config";
 
 type TextBlock = {
   type: "text";
@@ -35,26 +36,54 @@ type ImageBlock = {
 type ContentBlock = TextBlock | ImageBlock;
 
 export class AnthropicService extends LLMProviderService {
-  private readonly apiKey = process.env.ANTHROPIC_API_KEY;
-  private readonly useBedrock = process.env.USE_BEDROCK === "true";
-  private readonly anthropic!: Anthropic;
-  private readonly bedrock!: BedrockRuntimeClient;
+  environmentConfig!: EnvironmentConfig;
+  anthropic!: Anthropic;
+  bedrock!: BedrockRuntimeClient;
+  useBedrock!: boolean;
 
   constructor() {
     super();
-    if (!this.useBedrock) {
+    this.createInstances({
+      apiKey: process.env.ANTHROPIC_API_KEY as string,
+      useBedrock: process.env.USE_BEDROCK === "true",
+      AWS_REGION: process.env.AWS_REGION as string,
+      AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID as string,
+      AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY as string,
+    });
+  }
+
+  createInstances(config: {
+    apiKey: string;
+    useBedrock: boolean;
+    AWS_REGION: string;
+    AWS_ACCESS_KEY_ID: string;
+    AWS_SECRET_ACCESS_KEY: string;
+  }) {
+    this.useBedrock = config.useBedrock;
+    if (!config.useBedrock) {
       this.anthropic = new Anthropic({
-        apiKey: this.apiKey,
+        apiKey: config.apiKey,
       });
     } else {
       this.bedrock = new BedrockRuntimeClient({
-        region: process.env.AWS_REGION || "us-west-2",
+        region: config.AWS_REGION || "us-west-2",
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+          accessKeyId: config.AWS_ACCESS_KEY_ID || "",
+          secretAccessKey: config.AWS_SECRET_ACCESS_KEY || "",
         },
       });
     }
+  }
+
+  setEnvironmentConfig(environmentConfig: EnvironmentConfig) {
+    this.environmentConfig = environmentConfig;
+    this.createInstances({
+      apiKey: environmentConfig.ANTHROPIC_API_KEY as string,
+      useBedrock: environmentConfig.USE_BEDROCK as boolean,
+      AWS_REGION: environmentConfig.AWS_REGION as string,
+      AWS_ACCESS_KEY_ID: environmentConfig.AWS_ACCESS_KEY_ID as string,
+      AWS_SECRET_ACCESS_KEY: environmentConfig.AWS_SECRET_ACCESS_KEY as string,
+    });
   }
 
   async performTask(

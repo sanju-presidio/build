@@ -12,7 +12,7 @@
     "build": "tsc && cp template/output-template.html ./dist/output-template.html",
     "prepublishOnly": "npm run build",
     "app": "node dist/main.js",
-    "local:dev": "npm link",
+    "local:dev": "npm link factifai",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
