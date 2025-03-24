@@ -23,3 +23,4 @@ Object.defineProperty(exports, "FactifApp", { enumerable: true, get: function ()
 __exportStar(require("./interfaces/test-output.interface"), exports);
 __exportStar(require("./interfaces/app.enum"), exports);
 __exportStar(require("./interfaces/app.interface"), exports);
+__exportStar(require("./interfaces/environment.config"), exports);

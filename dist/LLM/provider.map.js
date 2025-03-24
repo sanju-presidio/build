@@ -7,7 +7,6 @@ const openai_service_1 = require("./openai.service");
 class ProviderService {
     constructor() { }
     getProviderInstance(provider, environmentConfig) {
-        console.log(provider, environmentConfig);
         switch (provider) {
             case app_enum_1.LLMProviders.OPENAI:
                 this.openai = new openai_service_1.OpenAIProvider();

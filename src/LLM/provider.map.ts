@@ -13,7 +13,6 @@ export class ProviderService {
     provider: LLMProviders,
     environmentConfig?: EnvironmentConfig,
   ) {
-    console.log(provider, environmentConfig);
     switch (provider) {
       case LLMProviders.OPENAI:
         this.openai = new OpenAIProvider();
