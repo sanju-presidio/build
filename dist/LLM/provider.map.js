@@ -10,6 +10,7 @@ class ProviderService {
         this.openai = new openai_service_1.OpenAIProvider();
     }
     getProviderInstance(provider, environmentConfig) {
+        console.log(provider, environmentConfig);
         switch (provider) {
             case app_enum_1.LLMProviders.OPENAI:
                 environmentConfig &&
