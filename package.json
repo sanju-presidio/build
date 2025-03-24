@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "tsc && node dist/main.js",
-    "build": "tsc && cp template/output-template.html ./dist/output-template.html",
+    "build": "rm -rf dist && tsc && cp template/output-template.html ./dist/output-template.html",
     "prepublishOnly": "npm run build",
     "app": "node dist/main.js",
     "local:dev": "npm link factifai",

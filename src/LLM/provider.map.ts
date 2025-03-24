@@ -4,8 +4,8 @@ import { OpenAIProvider } from "./openai.service";
 import { EnvironmentConfig } from "../interfaces/environment.config";
 
 export class ProviderService {
-  private anthropic: AnthropicService = new AnthropicService();
-  private openai: OpenAIProvider = new OpenAIProvider();
+  private anthropic!: AnthropicService;
+  private openai!: OpenAIProvider;
 
   constructor() {}
 
@@ -16,10 +16,12 @@ export class ProviderService {
     console.log(provider, environmentConfig);
     switch (provider) {
       case LLMProviders.OPENAI:
+        this.openai = new OpenAIProvider();
         environmentConfig &&
           this.openai.setEnvironmentConfig(environmentConfig);
         return this.openai;
       case LLMProviders.ANTHROPIC:
+        this.anthropic = new AnthropicService();
         environmentConfig &&
           this.anthropic.setEnvironmentConfig(environmentConfig);
         return this.anthropic;

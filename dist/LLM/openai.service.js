@@ -11,9 +11,10 @@ const tools_1 = require("../tools/tools");
 class OpenAIProvider extends provider_base_1.LLMProviderService {
     constructor() {
         super();
-        this.createInstances({
-            apiKey: process.env.OPENAI_API_KEY,
-        });
+        process.env.OPENAI_API_KEY &&
+            this.createInstances({
+                apiKey: process.env.OPENAI_API_KEY,
+            });
     }
     createInstances(config) {
         this.openai = new openai_1.default({

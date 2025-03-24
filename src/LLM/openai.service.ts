@@ -19,9 +19,10 @@ export class OpenAIProvider extends LLMProviderService {
   environmentConfig!: EnvironmentConfig;
   constructor() {
     super();
-    this.createInstances({
-      apiKey: process.env.OPENAI_API_KEY as string,
-    });
+    process.env.OPENAI_API_KEY &&
+      this.createInstances({
+        apiKey: process.env.OPENAI_API_KEY as string,
+      });
   }
 
   createInstances(config: { apiKey: string }) {
