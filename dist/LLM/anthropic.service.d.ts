@@ -7,7 +7,7 @@ import { IClickableElement } from "../interfaces/app.interface";
 import { EnvironmentConfig } from "../interfaces/environment.config";
 export declare class AnthropicService extends LLMProviderService {
     environmentConfig: EnvironmentConfig;
-    anthropic: Anthropic;
+    anthropic: Anthropic | null;
     bedrock: BedrockRuntimeClient;
     useBedrock: boolean;
     constructor();
@@ -34,4 +34,5 @@ export declare class AnthropicService extends LLMProviderService {
         toolArgs: any;
         text?: undefined;
     } | undefined)[];
+    destroy(): void;
 }

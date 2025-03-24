@@ -12,4 +12,5 @@ export abstract class LLMProviderService {
   ): Promise<Array<any>>;
 
   abstract transform(toolResponse: Array<any>): Array<any>;
+  abstract destroy(): void;
 }

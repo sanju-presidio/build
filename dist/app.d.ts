@@ -28,4 +28,5 @@ export declare class FactifApp {
         message?: string;
         content?: string;
     }[], testOutput: ITestOutput): ITestOutput;
+    destroyInstance(): void;
 }

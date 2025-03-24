@@ -15,7 +15,7 @@ import { ChatCompletion } from "openai/src/resources/chat/completions/completion
 import { EnvironmentConfig } from "../interfaces/environment.config";
 
 export class OpenAIProvider extends LLMProviderService {
-  private openai!: OpenAI | AzureOpenAI;
+  private openai: OpenAI | AzureOpenAI | null = null;
   environmentConfig!: EnvironmentConfig;
   constructor() {
     super();
@@ -145,5 +145,9 @@ export class OpenAIProvider extends LLMProviderService {
         };
       }
     });
+  }
+
+  destroy() {
+    this.openai = null;
   }
 }

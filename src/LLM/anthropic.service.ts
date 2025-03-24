@@ -37,7 +37,7 @@ type ContentBlock = TextBlock | ImageBlock;
 
 export class AnthropicService extends LLMProviderService {
   environmentConfig!: EnvironmentConfig;
-  anthropic!: Anthropic;
+  anthropic: Anthropic | null = null;
   bedrock!: BedrockRuntimeClient;
   useBedrock!: boolean;
 
@@ -189,7 +189,7 @@ export class AnthropicService extends LLMProviderService {
   }
 
   async anthropicProvider(messages: any[], model: string): Promise<Array<any>> {
-    const response = await this.anthropic.messages.create({
+    const response = await this.anthropic!.messages.create({
       model,
       max_tokens: 4096,
       messages,
@@ -215,5 +215,9 @@ export class AnthropicService extends LLMProviderService {
         };
       }
     });
+  }
+
+  destroy() {
+    this.anthropic = null;
   }
 }

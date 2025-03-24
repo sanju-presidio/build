@@ -24,4 +24,5 @@ export declare class OpenAIProvider extends LLMProviderService {
         toolArgs: any;
         text?: undefined;
     } | undefined)[];
+    destroy(): void;
 }

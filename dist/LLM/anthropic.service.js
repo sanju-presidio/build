@@ -13,6 +13,7 @@ const system_prompt_1 = require("../prompts/system.prompt");
 class AnthropicService extends provider_base_1.LLMProviderService {
     constructor() {
         super();
+        this.anthropic = null;
         this.createInstances({
             apiKey: process.env.ANTHROPIC_API_KEY,
             useBedrock: process.env.USE_BEDROCK === "true",
@@ -151,6 +152,9 @@ class AnthropicService extends provider_base_1.LLMProviderService {
                 };
             }
         });
+    }
+    destroy() {
+        this.anthropic = null;
     }
 }
 exports.AnthropicService = AnthropicService;

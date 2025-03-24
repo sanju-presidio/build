@@ -41,6 +41,7 @@ class FactifApp {
         try {
             await this.executeTask(this.sourceObject, provider, history);
             this.sourceObject.destroy();
+            provider.destroy();
             return this.testOutput;
         }
         catch (e) {
@@ -107,5 +108,6 @@ class FactifApp {
         testOutput.description = content.result;
         return testOutput;
     }
+    destroyInstance() { }
 }
 exports.FactifApp = FactifApp;
