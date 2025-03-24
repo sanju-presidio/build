@@ -40,7 +40,7 @@ export class FactifApp {
     this.sourceObject.setBrowserEventsCallback(
       this.captureBrowserEvents.bind(this),
     );
-    this.environmentConfig = loadConfig;
+    this.environmentConfig = { ...loadConfig };
     console.log("app =>", this.environmentConfig.MODEL);
   }
 
@@ -57,6 +57,7 @@ export class FactifApp {
       LLMProviders[
         this.environmentConfig.MODEL.toUpperCase() as keyof typeof LLMProviders
       ],
+      this.environmentConfig,
     );
     if (!provider) {
       throw new Error(

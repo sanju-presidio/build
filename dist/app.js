@@ -23,7 +23,7 @@ class FactifApp {
         this.providerService = new provider_map_1.ProviderService();
         this.sourceObject = new puppeteer_service_1.PlaywrightService();
         this.sourceObject.setBrowserEventsCallback(this.captureBrowserEvents.bind(this));
-        this.environmentConfig = loadConfig;
+        this.environmentConfig = { ...loadConfig };
         console.log("app =>", this.environmentConfig.MODEL);
     }
     async run(task) {
@@ -34,7 +34,7 @@ class FactifApp {
                 message: task,
             },
         ];
-        const provider = this.providerService.getProviderInstance(app_enum_1.LLMProviders[this.environmentConfig.MODEL.toUpperCase()]);
+        const provider = this.providerService.getProviderInstance(app_enum_1.LLMProviders[this.environmentConfig.MODEL.toUpperCase()], this.environmentConfig);
         if (!provider) {
             throw new Error(`No provider found for ${app_enum_1.LLMProviders[this.environmentConfig.MODEL.toUpperCase()]}`);
         }
