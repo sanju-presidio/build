@@ -1,0 +1,7 @@
+{
+  "testcases": [
+    "check login function in saucedemo. Check whether you are able login to saucedemo.com or not",
+    "Check whether clicking on any product is opening it corresponding page or not",
+    "Check whether the sum of the product in the cart is accurate"
+  ]
+}

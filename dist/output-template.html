@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FactifAI Test Report</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #e1e1e1;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #1a1a1a;
+    }
+    
+    /* Header */
+    .header {
+      background-color: #2d2d2d;
+      padding: 0.5rem 2rem;
+      border-bottom: 1px solid #404040;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #e1e1e1;
+    }
+    
+    /* Test Summary */
+    .test-summary {
+      display: flex;
+      padding: 0 1rem;
+      background-color: #2d2d2d;
+      gap: 2rem;
+    }
+    
+    .summary-item {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .summary-label {
+      font-weight: 500;
+    }
+    
+    /* Main Container */
+    .container {
+      display: grid;
+      grid-template-columns: 300px 500px 1fr;
+      height: calc(100vh - 55px);
+      overflow: hidden;
+      min-height: 0;
+      background-color: #1a1a1a;
+    }
+    
+    /* Test Cases List */
+    .test-cases {
+      border-right: 1px solid #404040;
+      overflow-y: auto;
+      background-color: #2d2d2d;
+      max-height: 100%;
+    }
+    
+    .test-case-item {
+      padding: 1rem;
+      border-bottom: 1px solid #404040;
+      cursor: pointer;
+    }
+    
+    .test-case-item:hover {
+      background-color: #3d3d3d;
+    }
+    
+    .test-case-item.active {
+      background-color: #3d3d3d;
+      border-left: 3px solid #0d6efd;
+    }
+    
+    .test-case-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: #e1e1e1;
+    }
+    
+    .test-case-description {
+      font-size: 0.875rem;
+      color: #a0a0a0;
+    }
+    
+    /* Chat Section */
+    .chat-section {
+      padding: 1rem;
+      overflow-y: auto;
+      height: calc(100vh - 55px);
+      display: flex;
+      flex-direction: column;
+      background-color: #1a1a1a;
+    }
+    
+    /* Chat Messages Container */
+    .chat-message {
+      flex: 0 0 auto;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      max-width: 80%;
+      word-wrap: break-word;
+      color: #e1e1e1;
+    }
+    
+    .chat-message h1,
+    .chat-message h2,
+    .chat-message h3 {
+      color: #e1e1e1;
+      margin: 0.5em 0;
+    }
+    
+    .chat-message h1 {
+      font-size: 1.5em;
+    }
+    
+    .chat-message h2 {
+      font-size: 1.3em;
+    }
+    
+    .chat-message h3 {
+      font-size: 1.1em;
+    }
+    
+    .chat-message p {
+      margin: 0.5em 0;
+    }
+    
+    .chat-message code {
+      background-color: #2d2d2d;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-family: monospace;
+      color: #e1e1e1;
+    }
+    
+    .chat-message pre {
+      background-color: #2d2d2d;
+      padding: 1em;
+      border-radius: 4px;
+      overflow-x: auto;
+      border: 1px solid #404040;
+    }
+    
+    .chat-message pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+    
+    .chat-message ul,
+    .chat-message ol {
+      margin: 0.5em 0;
+      padding-left: 1.5em;
+      color: #e1e1e1;
+    }
+    
+    .chat-message blockquote {
+      border-left: 3px solid #404040;
+      margin: 0.5em 0;
+      padding-left: 1em;
+      color: #a0a0a0;
+    }
+    
+    .chat-message.user {
+      background-color: #2d2d2d;
+      margin-left: auto;
+    }
+    
+    .chat-message.assistant {
+      background-color: #252525;
+      margin-right: auto;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .chat-message.assistant::after {
+      content: "📷";
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    
+    .chat-message.assistant.active {
+      border-left: 3px solid #0d6efd;
+      background-color: #2d2d2d;
+    }
+    
+    /* Right Section */
+    .right-section {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: #1a1a1a;
+    }
+    
+    /* Screenshot Section */
+    .screenshot-section {
+      position: relative;
+      border-bottom: 1px solid #404040;
+      background-color: #2d2d2d;
+      height: 65vh;
+    }
+    
+    .screenshot-container {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+    
+    .screenshot-img {
+      height: calc(100% - 50px);
+      max-width: 100%;
+      object-fit: contain;
+      background-color: #2d2d2d;
+      margin: 0 auto;
+    }
+    
+    .screenshot-controls-wrapper {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      right: 0;
+    }
+    
+    .screenshot-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .screenshot-nav {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .screenshot-nav:disabled {
+      background: #404040;
+      cursor: not-allowed;
+    }
+    
+    .screenshot-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #404040;
+      cursor: pointer;
+    }
+    
+    .dot.active {
+      background: #0d6efd;
+    }
+    
+    /* Console Section */
+    .console-section {
+      height: 45vh;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: #1e1e1e;
+      color: #e1e1e1;
+      font-family: "Courier New", monospace;
+    }
+    
+    .console-entry {
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+    a[href] {
+      color: #0d6efd;
+    }
+    
+    .passed {
+      color: #4caf50;
+    }
+    
+    .failed {
+      color: #f44336;
+    }
+    
+    .total {
+      color: #2196f3;
+    }
+    
+    .log-entry {
+      color: #e1e1e1;
+    }
+    
+    .log-info {
+      color: #4fc3f7;
+    }
+    
+    .log-warning {
+      color: #ffd600;
+    }
+    
+    .log-error {
+      color: #ff5252;
+    }
+    
+    .request-entry {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      background-color: #252525;
+      border-radius: 4px;
+    }
+    
+    .request-details {
+      margin-top: 0.5rem;
+      padding-left: 1rem;
+      font-size: 0.85rem;
+      color: #a0a0a0;
+    }
+    
+    .request-method {
+      display: inline-block;
+      padding: 0.125rem 0.375rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      color: #1a1a1a;
+    }
+    
+    .method-GET {
+      background-color: #4caf50;
+    }
+    
+    .method-POST {
+      background-color: #2196f3;
+    }
+    
+    .method-PUT {
+      background-color: #ff9800;
+    }
+    
+    .method-DELETE {
+      background-color: #f44336;
+    }
+    
+    .status-2xx {
+      color: #4caf50;
+    }
+    
+    .status-4xx {
+      color: #ff9800;
+    }
+    
+    .status-5xx {
+      color: #f44336;
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+  <h1>FactifAI</h1>
+  <div class="test-summary">
+    <div class="summary-item total">
+      <span class="summary-label">Test Case Count</span>
+      <span class="summary-value" id="total-count">0</span>
+    </div>
+    <div class="summary-item passed">
+      <span class="summary-label">Passed</span>
+      <span class="summary-value" id="passed-count">0</span>
+    </div>
+    <div class="summary-item failed">
+      <span class="summary-label">Failed</span>
+      <span class="summary-value" id="failed-count">0</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="test-cases" id="test-cases-list">
+    <!-- Test cases will be populated here -->
+  </div>
+  
+  <div class="chat-section" id="chat-section">
+    <!-- Chat messages will be populated here -->
+  </div>
+  
+  <div class="right-section">
+    <div class="screenshot-section">
+      <div class="screenshot-container">
+        <img
+          class="screenshot-img"
+          id="current-screenshot"
+          src=""
+          alt="Test screenshot"
+        />
+      </div>
+      <div class="screenshot-controls-wrapper">
+        <div class="screenshot-controls">
+          <button class="screenshot-nav" id="prev-screenshot">&lt;</button>
+          <div class="screenshot-dots" id="screenshot-dots">
+            <!-- Dots will be populated here -->
+          </div>
+          <button class="screenshot-nav" id="next-screenshot">&gt;</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="console-section" id="console-output">
+      <!-- Console output will be populated here -->
+    </div>
+  </div>
+</main>
+
+<script>
+  class TestReport {
+    constructor() {
+      this.data = null;
+      this.currentTestIndex = 0;
+      this.currentScreenshotIndex = 0;
+      
+      // DOM Elements
+      this.elements = {
+        totalCount: document.getElementById("total-count"),
+        passedCount: document.getElementById("passed-count"),
+        failedCount: document.getElementById("failed-count"),
+        testCasesList: document.getElementById("test-cases-list"),
+        chatSection: document.getElementById("chat-section"),
+        currentScreenshot: document.getElementById("current-screenshot"),
+        screenshotDots: document.getElementById("screenshot-dots"),
+        prevScreenshot: document.getElementById("prev-screenshot"),
+        nextScreenshot: document.getElementById("next-screenshot"),
+        consoleOutput: document.getElementById("console-output"),
+      };
+      
+      // Event Listeners
+      this.elements.prevScreenshot.addEventListener("click", () =>
+        this.navigateScreenshot(-1)
+      );
+      this.elements.nextScreenshot.addEventListener("click", () =>
+        this.navigateScreenshot(1)
+      );
+    }
+    
+    loadData(jsonData) {
+      this.data = jsonData;
+      this.updateSummary();
+      this.renderTestCases();
+      this.selectTest(0);
+    }
+    
+    updateSummary() {
+      const {summary} = this.data;
+      this.elements.totalCount.textContent = summary.total;
+      this.elements.passedCount.textContent = summary.passed;
+      this.elements.failedCount.textContent = summary.failed;
+    }
+    
+    renderTestCases() {
+      this.elements.testCasesList.innerHTML = this.data.tests
+        .map(
+          (test, index) => `
+                    <div class="test-case-item ${
+            index === 0 ? "active" : ""
+          }" data-index="${index}">
+                        <div class="test-case-name">${test.name}</div>
+                        <div class="test-case-description">${
+            test.description
+          }</div>
+                    </div>
+                `
+        )
+        .join("");
+      
+      this.elements.testCasesList.addEventListener("click", (e) => {
+        const testItem = e.target.closest(".test-case-item");
+        if (testItem) {
+          const index = parseInt(testItem.dataset.index);
+          this.selectTest(index);
+        }
+      });
+    }
+    
+    selectTest(index) {
+      this.currentTestIndex = index;
+      this.currentScreenshotIndex = 0;
+      
+      // Update test case selection
+      const testItems =
+        this.elements.testCasesList.querySelectorAll(".test-case-item");
+      testItems.forEach((item, i) => {
+        item.classList.toggle("active", i === index);
+      });
+      
+      this.renderChat();
+      this.renderScreenshots();
+      this.renderConsole();
+    }
+    
+    renderChat() {
+      const test = this.data.tests[this.currentTestIndex];
+      // Add marked library for markdown parsing
+      const markedScript = document.createElement("script");
+      markedScript.src =
+        "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+      document.head.appendChild(markedScript);
+      
+      markedScript.onload = () => {
+        this.elements.chatSection.innerHTML = test.conversation
+          .map(
+            (msg, index) => `
+                        <div class="chat-message ${msg.role} ${
+              msg.screenshotId ? "has-screenshot" : ""
+            }"
+                             data-message-id="${msg.id}">
+                            ${marked.parse(msg.message)}
+                        </div>
+                    `
+          )
+          .join("");
+        
+        // Add click handlers for assistant messages
+        this.elements.chatSection
+          .querySelectorAll(".chat-message.assistant")
+          .forEach((msg) => {
+            msg.addEventListener("click", () => {
+              const messageId = parseInt(msg.dataset.messageId);
+              const message = test.conversation.find(
+                (m) => m.id === messageId
+              );
+              if (message && message.screenshotId) {
+                const screenshotIndex = test.screenshots.findIndex(
+                  (s) => s.id === message.screenshotId
+                );
+                if (screenshotIndex !== -1) {
+                  this.showScreenshot(screenshotIndex);
+                }
+              }
+            });
+          });
+      };
+      
+      // Add click handlers for assistant messages
+      this.elements.chatSection
+        .querySelectorAll(".chat-message.assistant")
+        .forEach((msg) => {
+          msg.addEventListener("click", () => {
+            const messageId = parseInt(msg.dataset.messageId);
+            const message = test.conversation.find(
+              (m) => m.id === messageId
+            );
+            if (message && message.screenshotId) {
+              const screenshotIndex = test.screenshots.findIndex(
+                (s) => s.id === message.screenshotId
+              );
+              if (screenshotIndex !== -1) {
+                this.showScreenshot(screenshotIndex);
+              }
+            }
+          });
+        });
+    }
+    
+    renderScreenshots() {
+      const test = this.data.tests[this.currentTestIndex];
+      const screenshots = test.screenshots;
+      
+      // Update navigation buttons
+      this.elements.prevScreenshot.disabled =
+        this.currentScreenshotIndex === 0;
+      this.elements.nextScreenshot.disabled =
+        this.currentScreenshotIndex === screenshots.length - 1;
+      
+      // Update dots
+      this.elements.screenshotDots.innerHTML = screenshots
+        .map(
+          (_, index) => `
+                    <div class="dot ${
+            index === this.currentScreenshotIndex ? "active" : ""
+          }"
+                         data-index="${index}"></div>
+                `
+        )
+        .join("");
+      
+      this.elements.screenshotDots
+        .querySelectorAll(".dot")
+        .forEach((dot) => {
+          dot.addEventListener("click", () => {
+            this.showScreenshot(parseInt(dot.dataset.index));
+          });
+        });
+      
+      this.showScreenshot(this.currentScreenshotIndex);
+    }
+    
+    showScreenshot(index) {
+      const test = this.data.tests[this.currentTestIndex];
+      const screenshots = test.screenshots;
+      
+      if (index >= 0 && index < screenshots.length) {
+        this.currentScreenshotIndex = index;
+        const screenshot = screenshots[index];
+        
+        // Update image
+        this.elements.currentScreenshot.src = screenshot.image;
+        
+        // Update dots
+        this.elements.screenshotDots
+          .querySelectorAll(".dot")
+          .forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+          });
+        
+        // Update navigation buttons
+        this.elements.prevScreenshot.disabled = index === 0;
+        this.elements.nextScreenshot.disabled =
+          index === screenshots.length - 1;
+        
+        // Update chat highlighting
+        const messages = this.elements.chatSection.querySelectorAll(
+          ".chat-message.assistant"
+        );
+        messages.forEach((msg) => {
+          const messageId = parseInt(msg.dataset.messageId);
+          const message = test.conversation.find((m) => m.id === messageId);
+          msg.classList.toggle(
+            "active",
+            message && message.screenshotId === screenshot.id
+          );
+        });
+      }
+    }
+    
+    navigateScreenshot(direction) {
+      const newIndex = this.currentScreenshotIndex + direction;
+      const test = this.data.tests[this.currentTestIndex];
+      if (newIndex >= 0 && newIndex < test.screenshots.length) {
+        this.showScreenshot(newIndex);
+      }
+    }
+    
+    renderConsole() {
+      const test = this.data.tests[this.currentTestIndex];
+      const {logs, requests} = test.console;
+      
+      let consoleHtml = "";
+      
+      // Sort all entries by timestamp
+      const allEntries = [
+        ...logs,
+        ...requests.map((req) => ({...req, type: "request"})),
+      ].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      
+      allEntries.forEach((entry) => {
+        console.log("entry", entry);
+        
+        if (entry.type === "console") {
+          consoleHtml += `
+                            <div class="console-entry log-entry log-${entry.level}">
+                                ${entry.timestamp} [${entry.level}] [${entry.location}] ${entry.text}
+                            </div>
+                        `;
+        } else {
+          consoleHtml += `
+                            <div class="console-entry request-entry">
+                                <div>
+                                    <span class="request-method method-${
+            entry.method
+          }">${
+            entry.method !== undefined ? entry.method : ""
+          }</span>
+                                    <span>${entry.url}</span>
+                                </div>
+                                <div class="request-details">
+                                    <div>Resource Type: ${
+            entry.resourceType
+          }</div>
+                                    <div>Headers: ${entry.headers}</div>
+                                </div>
+                            </div>
+                        `;
+        }
+      });
+      
+      this.elements.consoleOutput.innerHTML = consoleHtml;
+    }
+  }
+  
+  // Initialize the report
+  const report = new TestReport();
+  const jsonData = ###JSON_DATA###;
+  report.loadData(jsonData);
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "name": "factifai",
+  "version": "1.0.0",
+  "description": "A CLI tool for automated testing and reporting",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "factifai": "dist/cli.js"
+  },
+  "scripts": {
+    "start": "tsc && node dist/main.js",
+    "build": "tsc && cp template/output-template.html ./dist/output-template.html",
+    "prepublishOnly": "npm run build",
+    "app": "node dist/main.js",
+    "local:dev": "npm link",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "testing",
+    "automation",
+    "reports",
+    "playwright"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.758.0",
+    "@aws-sdk/client-s3": "^3.772.0",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7",
+    "handlebars": "^4.7.8",
+    "openai": "^4.87.3",
+    "playwright": "^1.50.1",
+    "prettier": "^3.5.3",
+    "uuid": "^11.1.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
