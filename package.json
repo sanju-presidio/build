@@ -30,6 +30,7 @@
     "@anthropic-ai/sdk": "^0.39.0",
     "@aws-sdk/client-bedrock-runtime": "^3.758.0",
     "@aws-sdk/client-s3": "^3.772.0",
+    "@langchain/core": "^0.3.45",
     "commander": "^13.1.0",
     "dotenv": "^16.4.7",
     "handlebars": "^4.7.8",

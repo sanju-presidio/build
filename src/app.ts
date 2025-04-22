@@ -37,6 +37,7 @@ export class FactifApp {
   constructor(loadConfig: EnvironmentConfig) {
     this.providerService = new ProviderService();
     this.sourceObject = new PlaywrightService();
+    PlaywrightService.setInstance(this.sourceObject)
     this.sourceObject.setBrowserEventsCallback(
       this.captureBrowserEvents.bind(this),
     );
